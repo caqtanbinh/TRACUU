@@ -1,0 +1,271 @@
+<html>
+   <head>
+      <style>
+         body {
+            overflow: hidden;
+         }
+
+         table {
+            margin-left: auto; 
+            margin-right: auto;
+            border: 1px solid black;
+         }
+	 
+         
+         th, td 
+         {
+            margin:10px 0;
+            border: 1px solid black;
+            padding:1px 2px;
+            font:40px Verdana;
+         }
+
+         th {
+            font-weight:bold;
+            color: white;
+            background-color: blue;
+            text-align:center
+         }
+
+         td {
+            width: 50%;
+         }
+
+         input {
+            width: 100%;
+            font-size: 40px;
+            
+         }
+		
+        .header {
+           overflow: hidden;
+           position: fixed; /* Set the navbar to fixed position */
+           top: 0; /* Position the navbar at the top of the page */
+           width: 99vw; /* Full width */
+        }
+
+
+       #container_loader {
+            position: absolute;
+            top:0;
+            z-index: 2;
+            /*visibility:hidden;*/
+            display: none;
+         }
+
+         .main_loader {
+            width: 100vw;
+            height: 95vh;
+            /*background: #2185C5;*/
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+         }
+
+         .loader{
+            width: auto;
+            height: auto;
+            background: white;
+            display: inline-block;
+            padding: 10px;
+
+    
+            border: 8px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 8px solid green;
+            border-bottom: 8px solid green;
+            width: 60px;
+            height: 60px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+         }
+      
+         @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+         }
+
+         @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+         }
+
+       .cty {
+          font-size: 40px;
+          font-weight: bold;
+          color: white;
+          background: blue;
+       }
+       .tieude {
+          font-size: 40px;
+          font-weight: bold;
+       }
+       
+      .name, .ngay {
+         width: 100%;
+         text-align: left;
+         font-size: 40px;
+         color: red;
+      }
+      
+      #info {
+         width: 100%;
+         text-align: center;
+         font-size: 40px;
+         color: blue;
+      }
+
+      #read {
+         margin-bottom: 10px;
+      }
+
+      #container_showData {
+            position: absolute;
+            //top:0;
+            z-index: 1;
+
+         }
+
+         .main_showData {
+            width: 100vw;
+            height: 100vh;
+            background: white;  /*#2185C5;*/
+            display: table-cell;
+            text-align: center;
+            vertical-align: top;
+            /*vertical-align: middle;*/
+         }
+
+         #showData {
+            /*width: auto;*/
+            width: 100%;
+            height: auto;
+            background: white;
+
+            display: inline-block;
+            overflow-y: scroll;
+            
+            text-align: center;
+            font-size: 40px;
+            color: red;
+            
+    
+         }
+		
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    
+
+   </head>
+   <body>
+      <div align="center" class="header" id="header">
+         <div class="cty">CÔNG AN QUẬN TÂN BÌNH</div>
+         <div class="tieude">TRA CỨU TIẾN ĐỘ CĂN CƯỚC CÔNG DÂN</div>
+         <hr> 
+         <br>
+         <div class="name">Nhập họ tên không dấu
+            <br>
+            <input type = "text" name ="name" id="name" placeholder="vd: nguyen thi tuyet">
+         </div>
+         <br>
+         <div class="ngay">Nhập ngày tháng năm sinh theo dạng: ngày (2 số) tháng (2 số) năm (4 số)
+            <br>
+            <input type = "number" name ="ngay" id="ngay" placeholder="vd: 03122021" maxlength="8">
+         </div>
+         <br>
+
+         <input type="button" id="read" onclick="read_value()" value="Tìm kiếm" />
+         <br>
+         
+      </div>
+
+      <div id="container_loader">
+	 <div class="main_loader" >
+    	    <div class="loader"></div>
+	</div>
+      </div>
+
+     <div id="container_showData">
+	 <div class="main_showData" >
+            <div id="info"></div>
+            <hr>
+    	    <div id="showData"></div>
+	</div>
+      </div>
+      
+
+   </body>
+
+   <script>
+       function EID(NameID) {return document.getElementById(NameID);}
+
+       var script_url = "https://script.google.com/macros/s/AKfycbzRZzq8bBsb5RDW1JE7rKXSXNTqUbkcwSaO0BAJCT0x_-X-Itt0/exec";
+       
+
+       EID("container_showData").style.top = EID("header").offsetHeight + "px";
+       EID("container_showData").style.height = (window.innerHeight - EID("header").offsetHeight) + "px";
+
+       function read_value() {
+
+          EID("showData").innerHTML = "";
+          EID("info").innerHTML = "";
+          //EID("showData").style.display ="none";
+   
+          var name = $("#name").val();
+          var ngay = $("#ngay").val();
+
+          ngay = ngay.substring(4, 8) + ngay.substring(2, 4) + ngay.substring(0, 2);
+
+          if (parseFloat(ngay) > 19000000) {
+	     name = name.toUpperCase();
+
+             EID("container_loader").style.display = "block";
+          
+             var url = script_url+"?name=" + name + "&ngay=" + ngay + "&action=read";
+             var slag;
+             $.getJSON(url, function (json) {
+  	        slag = json.records.map(doc => Object.values(doc));
+                
+		//EID("showData").style.display ="block";
+                if (slag.length >=1) { 
+
+                   var table = document.createElement("table");
+                   var header = table.createTHead();
+		   var row = header.insertRow(0);     
+		   var cell1 = row.insertCell(0);
+		   var cell2 = row.insertCell(1);
+	
+		   cell1.innerHTML = "<b>Họ và tên</b>";
+		   cell2.innerHTML = "<b>Ngày sinh</b>";
+                   //EID("showData").innerHTML = slag;
+
+		   for (var i = 0; i < slag.length; i++) {
+                      var tr = table.insertRow(-1);
+		      var tabCell = tr.insertCell(-1);
+                      tabCell.innerHTML = slag[i][1];
+		      tabCell = tr.insertCell(-1);
+                      ngay = slag[i][2];
+                      ngay = ngay.substring(6,8) + "/" + ngay.substring(4,6) + "/" + ngay.substring(0,4);
+		      tabCell.innerHTML = ngay;
+                   }
+		   
+                   EID("showData").appendChild(table);
+
+                   EID("info").innerHTML = "Đã có CCCD, bạn liên hệ nơi bạn đăng ký để nhận CCCD mới";
+
+		} else {
+                   EID("showData").innerHTML = "Căn cước công dân của bạn hiện tại chưa được gửi từ Hà Nội về, bạn thường xuyên kiểm tra tại trang web này để biết kết quả tiến độ cấp CCCD của mình. Xin cảm ơn";
+                }
+
+
+                EID("container_loader").style.display = "none";
+                
+             });
+           } else {
+		EID("showData").innerHTML = "Bạn nhập sai định dạng ngày";
+           }
+	}
+  
+   </script>
+<html>
