@@ -159,10 +159,10 @@
     
 
    </head>
-   <body>
+      <body>
       <div align="center" class="header" id="header">
-         <div class="cty">CÔNG AN QUẬN TÂN BÌNH</div>
-         <div class="tieude">TRA CỨU TIẾN ĐỘ CĂN CƯỚC CÔNG DÂN</div>
+         <div id="cty" class="cty">CÔNG AN</div>
+         <div id="tieude" class="tieude">TRA CỨU TIẾN ĐỘ CĂN CƯỚC CÔNG DÂN</div>
          <hr> 
          <br>
          <div class="name">Nhập họ tên không dấu
@@ -206,7 +206,21 @@
 
        EID("container_showData").style.top = EID("header").offsetHeight + "px";
        EID("container_showData").style.height = (window.innerHeight - EID("header").offsetHeight) + "px";
+       
+       InsertLabel();
 
+       var slag1;
+       function InsertLabel() {
+          var url = script_url+"?action=info";
+          $.getJSON(url, function (json) {
+  	     slag1 = json.records.map(doc => Object.values(doc));
+                
+             EID("cty").innerHTML = slag1[0][1];
+             EID("tieude").innerHTML = slag1[1][1];
+                
+          });
+       }
+       
        function read_value() {
 
           EID("showData").innerHTML = "";
@@ -253,10 +267,12 @@
 		   
                    EID("showData").appendChild(table);
 
-                   EID("info").innerHTML = "Đã có CCCD, bạn liên hệ nơi bạn đăng ký để nhận CCCD mới";
+                   //EID("info").innerHTML = "Đã có CCCD, bạn liên hệ nơi bạn đăng ký để nhận CCCD mới";
+                   EID("info").innerHTML = slag1[2][1];
 
 		} else {
-                   EID("showData").innerHTML = "Căn cước công dân của bạn hiện tại chưa được gửi từ Hà Nội về, bạn thường xuyên kiểm tra tại trang web này để biết kết quả tiến độ cấp CCCD của mình. Xin cảm ơn";
+                   //EID("showData").innerHTML = "Căn cước công dân của bạn hiện tại chưa được gửi từ Hà Nội về, bạn thường xuyên kiểm tra tại trang web này để biết kết quả tiến độ cấp CCCD của mình. Xin cảm ơn";
+                   EID("showData").innerHTML = slag1[3][1];
                 }
 
 
@@ -264,7 +280,8 @@
                 
              });
            } else {
-		EID("showData").innerHTML = "Bạn nhập sai định dạng ngày";
+		//EID("showData").innerHTML = "Bạn nhập sai định dạng ngày";
+                EID("showData").innerHTML = slag1[4][1];
            }
 	}
   
