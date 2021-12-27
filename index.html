@@ -238,8 +238,9 @@
                 alert("Đã kết nối với server thành công, mời bạn tra cứu CCCD");
                 var str = arr[1];
                 var timthay = str.indexOf("vitri=phuong");
-		     alert( arr[1] + " --- " +timthay);
+		    
                 if (timthay>-1) {
+	            alert( arr[1] + " --- " +timthay);
 	           str = " - PHƯỜNG " + str.substring(12,str.length);
 	           EID("cty").innerHTML = EID("cty").innerHTML + str;
                 }
