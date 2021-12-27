@@ -41,7 +41,8 @@
            overflow: hidden;
            position: fixed; /* Set the navbar to fixed position */
            top: 0; /* Position the navbar at the top of the page */
-           width: 98vw; /* Full width */
+           width: 99vw; /* Full width */
+           display: none;
         }
 
 
@@ -117,7 +118,7 @@
 
       #read {
          margin-bottom: 10px;
-	 width: 30%;
+         width: 50%;
       }
 
       #container_showData {
@@ -159,7 +160,7 @@
     
 
    </head>
-      <body>
+   <body>
       <div align="center" class="header" id="header">
          <div id="cty" class="cty">CÔNG AN</div>
          <div id="tieude" class="tieude">TRA CỨU TIẾN ĐỘ CĂN CƯỚC CÔNG DÂN</div>
@@ -202,25 +203,53 @@
        function EID(NameID) {return document.getElementById(NameID);}
 
        var script_url = "https://script.google.com/macros/s/AKfycbzRZzq8bBsb5RDW1JE7rKXSXNTqUbkcwSaO0BAJCT0x_-X-Itt0/exec";
-       
+       var urlLink;
 
-       EID("container_showData").style.top = EID("header").offsetHeight + "px";
-       EID("container_showData").style.height = (window.innerHeight - EID("header").offsetHeight) + "px";
+       
        
        InsertLabel();
 
        var slag1;
        function InsertLabel() {
+          
+          
           var url = script_url+"?action=info";
           $.getJSON(url, function (json) {
   	     slag1 = json.records.map(doc => Object.values(doc));
-                
+             //alert(slag1);   
              EID("cty").innerHTML = slag1[0][1];
              EID("tieude").innerHTML = slag1[1][1];
                 
           });
+	  getURL();
        }
        
+       function getURL() {
+          var url = window.location.href;
+          var arr = url.split('?');
+          var url = script_url+"?action=url&" + arr[1];
+//alert(url);
+          var slag;
+          $.getJSON(url, function (json) {
+  	     slag = json.records.map(doc => Object.values(doc));
+             //alert(slag[0][1])   
+             if (slag.length >=1) {
+	        urlLink = slag[0][1];
+                alert("Đã kết nối với server thành công, mời bạn tra cứu CCCD");
+                var str = arr[1];
+                var timthay = str.indexOf("vitri=phuong");
+                if (timthay!=-1) {
+	           str = " - PHƯỜNG " + str.substring(12,str.length);
+                }
+                EID("cty").innerHTML = EID("cty").innerHTML + str;
+                
+                EID("header").style.display = "block";
+                EID("container_showData").style.top = EID("header").offsetHeight + "px";
+                EID("container_showData").style.height = (window.innerHeight - EID("header").offsetHeight) + "px";
+             }   
+          });
+       }
+
        function read_value() {
 
           EID("showData").innerHTML = "";
@@ -237,7 +266,8 @@
 
              EID("container_loader").style.display = "block";
           
-             var url = script_url+"?name=" + name + "&ngay=" + ngay + "&action=read";
+             //var url = script_url+"?name=" + name + "&ngay=" + ngay + "&action=read";
+             var url = script_url+"?name=" + name + "&ngay=" + ngay + "&link=" + urlLink + "&action=read";
              var slag;
              $.getJSON(url, function (json) {
   	        slag = json.records.map(doc => Object.values(doc));
