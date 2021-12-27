@@ -228,7 +228,8 @@
        function getURL() {
           var url = window.location.href;
           var arr = url.split('?');
-          var url = script_url+"?action=url&" + arr[1];
+	  var arr1 = arr[1].toString().split('&');
+          var url = script_url+"?action=url&" + arr1[0];
 //alert(url);
           var slag;
           $.getJSON(url, function (json) {
@@ -237,7 +238,7 @@
              if (slag.length >=1) {
 	        urlLink = slag[0][1];
                 alert("Đã kết nối với server thành công, mời bạn tra cứu CCCD");
-                var str = arr[1];
+                var str = arr1[0];
                 var timthay = str.indexOf("vitri=phuong");
 		    
                 if (timthay>-1) {
