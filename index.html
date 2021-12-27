@@ -240,8 +240,9 @@
                 var timthay = str.indexOf("vitri=phuong");
                 if (timthay!=-1) {
 	           str = " - PHƯỜNG " + str.substring(12,str.length);
+	           EID("cty").innerHTML = EID("cty").innerHTML + str;
                 }
-                EID("cty").innerHTML = EID("cty").innerHTML + str;
+                
                 
                 EID("header").style.display = "block";
                 EID("container_showData").style.top = EID("header").offsetHeight + "px";
